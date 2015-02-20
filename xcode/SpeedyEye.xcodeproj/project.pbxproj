@@ -39,6 +39,7 @@
 		7559C0A01A97C25D0052AA64 /* ps3eye.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ps3eye.cpp; path = ../src/ps3eye.cpp; sourceTree = "<group>"; };
 		7559C0A11A97C25D0052AA64 /* ps3eye.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ps3eye.h; path = ../src/ps3eye.h; sourceTree = "<group>"; };
 		75B964591A97C46900B3A3EB /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		75B9645B1A97C73800B3A3EB /* yuv422.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = yuv422.h; path = ../src/yuv422.h; sourceTree = "<group>"; };
 		77AA18EBC4B445CBA81DB3E7 /* CinderApp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = CinderApp.icns; path = ../resources/CinderApp.icns; sourceTree = "<group>"; };
 		884E2446F6064146A9360DEA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* SpeedyEye.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpeedyEye.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -79,7 +80,6 @@
 			isa = PBXGroup;
 			children = (
 				7559C0A01A97C25D0052AA64 /* ps3eye.cpp */,
-				7559C0A11A97C25D0052AA64 /* ps3eye.h */,
 				BEF4A021A75E4235990397FB /* SpeedyEyeApp.cpp */,
 			);
 			name = Source;
@@ -136,6 +136,8 @@
 			isa = PBXGroup;
 			children = (
 				A4B69527DE42487993078D4E /* Resources.h */,
+				75B9645B1A97C73800B3A3EB /* yuv422.h */,
+				7559C0A11A97C25D0052AA64 /* ps3eye.h */,
 				35615C56F759431B87989053 /* SpeedyEye_Prefix.pch */,
 			);
 			name = Headers;

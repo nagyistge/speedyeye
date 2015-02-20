@@ -560,7 +560,7 @@ public:
 	        i = (frame_work_ind + 1) & 15;
 	        frame_work_ind = i;            
             frame_data_len = 0;
-	        //debug("frame completed %d\n", frame_complete_ind);
+//	        printf("frame completed %d\n", frame_complete_ind);
 	    }
 	}
 
