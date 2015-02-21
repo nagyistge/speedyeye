@@ -8,7 +8,7 @@ static const int ITUR_BT_601_CVG = -852492;
 static const int ITUR_BT_601_CVR = 1673527;
 static const int ITUR_BT_601_SHIFT = 20;
 
-static void yuv422_to_rgba(const uint8_t *yuv_src, const int stride, uint8_t *dst, const int width, const int height)
+static void yuv422_to_rgbl(const uint8_t *yuv_src, const int stride, uint8_t *dst, const int width, const int height)
 {
     const int bIdx = 0;
     const int uIdx = 0;
@@ -34,17 +34,19 @@ static void yuv422_to_rgba(const uint8_t *yuv_src, const int stride, uint8_t *ds
             int guv = (1 << (ITUR_BT_601_SHIFT - 1)) + ITUR_BT_601_CVG * v + ITUR_BT_601_CUG * u;
             int buv = (1 << (ITUR_BT_601_SHIFT - 1)) + ITUR_BT_601_CUB * u;
 
-            int y00 = _max(0, static_cast<int>(yuv_src[i + yIdx]) - 16) * ITUR_BT_601_CY;
+            uint8_t cy00 = yuv_src[i + yIdx];
+            int y00 = _max(0, static_cast<int>(cy00) - 16) * ITUR_BT_601_CY;
             row[2-bIdx] = _saturate((y00 + ruv) >> ITUR_BT_601_SHIFT);
             row[1]      = _saturate((y00 + guv) >> ITUR_BT_601_SHIFT);
             row[bIdx]   = _saturate((y00 + buv) >> ITUR_BT_601_SHIFT);
-            row[3]      = (0xff);
+            row[3]      = cy00;
 
-            int y01 = _max(0, static_cast<int>(yuv_src[i + yIdx + 2]) - 16) * ITUR_BT_601_CY;
+            uint8_t cy01 = yuv_src[i + yIdx + 2];
+            int y01 = _max(0, static_cast<int>(cy01) - 16) * ITUR_BT_601_CY;
             row[6-bIdx] = _saturate((y01 + ruv) >> ITUR_BT_601_SHIFT);
             row[5]      = _saturate((y01 + guv) >> ITUR_BT_601_SHIFT);
             row[4+bIdx] = _saturate((y01 + buv) >> ITUR_BT_601_SHIFT);
-            row[7]      = (0xff);
+            row[7]      = cy01;
         }
     }
 

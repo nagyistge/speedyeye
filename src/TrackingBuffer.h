@@ -7,7 +7,7 @@
 #include <fstream>
 #include <boost/interprocess/file_mapping.hpp>
 #include <boost/interprocess/mapped_region.hpp>
-
+#include "cinder/Color.h"
 #include "ps3eye.h"
 
 
@@ -28,6 +28,7 @@ public:
     
     struct Header_t {
         uint32_t frame_counter;
+        float min_point_quality;
         uint8_t camera_autogain;
         uint8_t camera_gain;
         uint8_t camera_exposure;
@@ -52,12 +53,13 @@ public:
     struct Frame_t {
         double timestamp;
         uint32_t num_points;
-        uint32_t pixels[kWidth * kHeight];
+        uint32_t pixels[kWidth * kHeight];      // Luminance + RGB
         Point_t points[kMaxTrackingPoints];
 
         void init(double timestamp);
         void trackPoints(const Frame_t &previous);
-        void newPoint(const Frame_t &previous);
+        bool newPoint(const Frame_t &previous);
+        ci::Color8u getPixel(int x, int y) const;
     };
     
     struct SharedMemory_t {

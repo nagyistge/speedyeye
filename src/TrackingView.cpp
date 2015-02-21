@@ -21,7 +21,7 @@ void TrackingView::draw(TrackingBuffer &buffer)
     uint32_t frame_counter = buffer.data()->header.frame_counter;
     uint32_t first_frame = max<int64_t>(0, int64_t(frame_counter) - (buffer.kNumFrames - 1));
     for (uint32_t i = first_frame; i < frame_counter; i++) {
-        drawFrame(buffer, i, 0.1f);
+        drawFrame(buffer, i, 0.2f);
     }
 }
 
@@ -47,28 +47,38 @@ void TrackingView::drawFrame(TrackingBuffer &buffer, unsigned index, float alpha
     gl::draw(tex.second);
 
     unsigned num_points = min<unsigned>(0+TrackingBuffer::kMaxTrackingPoints, frame.num_points);
-
+    unsigned minAge = 10;
+    
     // Black outline
     gl::color(0.0f, 0.0f, 0.0f, alpha);
     for (unsigned i = 0; i < num_points; i++) {
-        auto& point = frame.points[i];
-        Vec2f pos(point.x, point.y);
-        gl::drawSolidCircle(pos, 3.0f);
+        if (frame.points[i].age >= minAge) {
+            auto& point = frame.points[i];
+            Vec2f pos(point.x, point.y);
+            gl::drawSolidCircle(pos, 0.8f);
+        }
     }
 
     // White dot
-    gl::color(1.0f, 1.0f, 1.0f, alpha);
+    gl::color(1.0f, 1.0f, 1.0f, 1.0f);
     for (unsigned i = 0; i < num_points; i++) {
-        auto& point = frame.points[i];
-        Vec2f pos(point.x, point.y);
-        gl::drawSolidCircle(pos, 1.8f);
+        if (frame.points[i].age >= minAge) {
+            auto& point = frame.points[i];
+            Vec2f pos(point.x, point.y);
+            gl::drawSolidCircle(pos, 0.5f);
+        }
     }
 
     // Vector
+    gl::lineWidth(1.5f);
+    gl::color(1.0f, 1.0f, 1.0f, 1.0f);
     for (unsigned i = 0; i < num_points; i++) {
-        auto& point = frame.points[i];
-        Vec2f pos(point.x, point.y);
-        Vec2f delta(point.dx, point.dy);
-        gl::drawLine(pos-delta, pos);
+        if (frame.points[i].age >= minAge) {
+            auto& point = frame.points[i];
+            Vec2f pos(point.x, point.y);
+            Vec2f delta(point.dx, point.dy);
+            gl::drawLine(pos-delta, pos);
+        }
     }
 }
+    

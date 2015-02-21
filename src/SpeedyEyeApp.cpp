@@ -42,6 +42,7 @@ void SpeedyEyeApp::prepareSettings(Settings *settings)
 {
     settings->setTitle("SpeedyEye");
     settings->setFrameRate(60.0f);
+    settings->setWindowSize(800, 600);
 }
 
 void SpeedyEyeApp::setup()
@@ -66,20 +67,23 @@ void SpeedyEyeApp::setup()
 
     mThread = thread(bind(&SpeedyEyeApp::threadFn, this));
 
-    mParams = params::InterfaceGl::create(getWindow(), "Camera Settings", toPixels(Vec2i(250, 225)));
+    mParams = params::InterfaceGl::create(getWindow(), "Camera Settings", toPixels(Vec2i(250, 300)));
 
+    mParams->addParam("Flip H", (bool*)&mTrackingBuffer.data()->header.camera_flip_h);
+    mParams->addParam("Flip V", (bool*)&mTrackingBuffer.data()->header.camera_flip_v);
+    mParams->addParam("Tracking point quality", &mTrackingBuffer.data()->header.min_point_quality).min(0.001f).max(1.f).step(0.001f);
+    mParams->addSeparator();
     mParams->addParam("Auto gain", (bool*)&mTrackingBuffer.data()->header.camera_autogain);
     mParams->addParam("Gain", &mTrackingBuffer.data()->header.camera_gain).min(0).max(255);
     mParams->addParam("Exposure", &mTrackingBuffer.data()->header.camera_exposure).min(0).max(255);
     mParams->addParam("Sharpness", &mTrackingBuffer.data()->header.camera_sharpness).min(0).max(255);
-    mParams->addParam("Hue", &mTrackingBuffer.data()->header.camera_hue).min(0).max(255);
-    mParams->addParam("Auto white balance", (bool*)&mTrackingBuffer.data()->header.camera_awb);
     mParams->addParam("Brightness", &mTrackingBuffer.data()->header.camera_brightness).min(0).max(255);
     mParams->addParam("Contrast", &mTrackingBuffer.data()->header.camera_contrast).min(0).max(255);
+    mParams->addSeparator();
+    mParams->addParam("Auto white balance", (bool*)&mTrackingBuffer.data()->header.camera_awb);
     mParams->addParam("Blue balance", &mTrackingBuffer.data()->header.camera_blueblc).min(0).max(255);
     mParams->addParam("Red balance", &mTrackingBuffer.data()->header.camera_redblc).min(0).max(255);
-    mParams->addParam("Flip H", (bool*)&mTrackingBuffer.data()->header.camera_flip_h);
-    mParams->addParam("Flip V", (bool*)&mTrackingBuffer.data()->header.camera_flip_v);
+    mParams->addParam("Hue", &mTrackingBuffer.data()->header.camera_hue).min(0).max(255);
 }
 
 void SpeedyEyeApp::threadFn()
@@ -150,7 +154,7 @@ void SpeedyEyeApp::captureFrame()
 
     newFrame.init(getElapsedSeconds());
 
-    yuv422_to_rgba(mEye->getLastFramePointer(), mEye->getRowBytes(),
+    yuv422_to_rgbl(mEye->getLastFramePointer(), mEye->getRowBytes(),
                    (uint8_t*) newFrame.pixels,
                    TrackingBuffer::kWidth, TrackingBuffer::kHeight);
 
@@ -160,9 +164,7 @@ void SpeedyEyeApp::captureFrame()
 
         newFrame.trackPoints(prevFrame);
         
-        if (newFrame.num_points < TrackingBuffer::kMaxTrackingPoints) {
-            newFrame.newPoint(prevFrame);
-        }
+        while (newFrame.num_points < TrackingBuffer::kMaxTrackingPoints && newFrame.newPoint(prevFrame));
     }
     
     // New frame is now fully written
