@@ -25,7 +25,6 @@ TrackingBuffer::TrackingBuffer(const char *filename)
     // Set up default camera settings
     Header_t& header = data()->header;
 
-    header.tracking_point_limit = 200;
     header.camera_autogain = true;
     header.camera_gain = 20;
     header.camera_exposure = 120;
@@ -38,4 +37,21 @@ TrackingBuffer::TrackingBuffer(const char *filename)
     header.camera_redblc = 128;
     header.camera_flip_h = false;
     header.camera_flip_v = false;
+}
+
+void TrackingBuffer::Frame_t::init(double timestamp)
+{
+    this->timestamp = timestamp;
+    num_points = 0;
+
+}
+
+void TrackingBuffer::Frame_t::trackPoints(const Frame_t &previous)
+{
+
+}
+
+void TrackingBuffer::Frame_t::newPoint(const Frame_t &previous)
+{
+    
 }

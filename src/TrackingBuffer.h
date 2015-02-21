@@ -28,7 +28,6 @@ public:
     
     struct Header_t {
         uint32_t frame_counter;
-        uint32_t tracking_point_limit;
         uint8_t camera_autogain;
         uint8_t camera_gain;
         uint8_t camera_exposure;
@@ -55,6 +54,10 @@ public:
         uint32_t num_points;
         uint32_t pixels[kWidth * kHeight];
         Point_t points[kMaxTrackingPoints];
+
+        void init(double timestamp);
+        void trackPoints(const Frame_t &previous);
+        void newPoint(const Frame_t &previous);
     };
     
     struct SharedMemory_t {
@@ -65,7 +68,7 @@ public:
     SharedMemory_t* data() {
         return static_cast<SharedMemory_t*>(mMappedRegion.get_address());
     }
-
+    
 private:
     boost::interprocess::file_mapping mFileMapping;
     boost::interprocess::mapped_region mMappedRegion;

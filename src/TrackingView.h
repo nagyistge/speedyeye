@@ -10,7 +10,7 @@
 class TrackingView {
 public:
     void setup();
-    void draw(TrackingBuffer &buffer, float alpha = 0.5f);
+    void draw(TrackingBuffer &buffer);
     void drawFrame(TrackingBuffer &buffer, unsigned index, float alpha = 1.0f);
 
 private:

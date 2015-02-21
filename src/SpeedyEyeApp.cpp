@@ -34,6 +34,7 @@ private:
     bool                    mExiting;
 
     void captureFrame();
+    void newTrackingPoint();
 };
 
 
@@ -133,10 +134,11 @@ void SpeedyEyeApp::shutdown()
 void SpeedyEyeApp::draw()
 {
     gl::clear();
-    gl::setMatricesWindow( getWindowWidth(), getWindowHeight() );
-
+    
+    gl::setMatricesWindow(TrackingBuffer::kWidth, TrackingBuffer::kHeight);
     mTrackingView.draw(mTrackingBuffer);
-
+    
+    gl::setMatricesWindow(getWindowWidth(), getWindowHeight());
     mParams->draw();
 }
 
@@ -146,13 +148,23 @@ void SpeedyEyeApp::captureFrame()
     uint32_t frame_counter = shm->header.frame_counter;
     auto& newFrame = shm->frames[frame_counter & (TrackingBuffer::kNumFrames-1)];
 
-    newFrame.timestamp = getElapsedSeconds();
-    newFrame.num_points = 0;
+    newFrame.init(getElapsedSeconds());
 
     yuv422_to_rgba(mEye->getLastFramePointer(), mEye->getRowBytes(),
                    (uint8_t*) newFrame.pixels,
                    TrackingBuffer::kWidth, TrackingBuffer::kHeight);
 
+    if (frame_counter > 0) {
+        // There exists a previous frame, we can do tracking
+        auto& prevFrame = shm->frames[(frame_counter - 1) & (TrackingBuffer::kNumFrames-1)];
+
+        newFrame.trackPoints(prevFrame);
+        
+        if (newFrame.num_points < TrackingBuffer::kMaxTrackingPoints) {
+            newFrame.newPoint(prevFrame);
+        }
+    }
+    
     // New frame is now fully written
     shm->header.frame_counter = frame_counter + 1;
 }
