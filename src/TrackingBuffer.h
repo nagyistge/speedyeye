@@ -24,7 +24,7 @@ public:
     static const unsigned kHeight = 240;
     static const unsigned kFPS = 187;
     
-    static const unsigned kMaxTrackingPoints = 4 * 1024;
+    static const unsigned kMaxTrackingPoints = 1024;
     
     struct Header_t {
         uint32_t frame_counter;

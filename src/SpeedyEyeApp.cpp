@@ -32,7 +32,10 @@ private:
     TrackingView            mTrackingView;
     thread                  mThread;
     bool                    mExiting;
-
+    float                   mAverageCameraFps;
+    float                   mRelativeTrackingTime;
+    int                     mCurrentNumPoints;
+    
     void captureFrame();
     void newTrackingPoint();
 };
@@ -48,6 +51,9 @@ void SpeedyEyeApp::prepareSettings(Settings *settings)
 void SpeedyEyeApp::setup()
 {
 	mExiting = false;
+    mAverageCameraFps = 0.0f;
+    mCurrentNumPoints = 0;
+    mRelativeTrackingTime = 0.0f;
     mTrackingBuffer = TrackingBuffer("tracking-buffer.bin");
     
     std::vector<PS3EYECam::PS3EYERef> devices(PS3EYECam::getDevices());
@@ -69,6 +75,10 @@ void SpeedyEyeApp::setup()
 
     mParams = params::InterfaceGl::create(getWindow(), "Camera Settings", toPixels(Vec2i(250, 300)));
 
+    mParams->addParam("Camera FPS", &mAverageCameraFps, "readonly=true");
+    mParams->addParam("Tracking points", &mCurrentNumPoints, "readonly=true");
+    mParams->addParam("Tracking time", &mRelativeTrackingTime, "readonly=true");
+    mParams->addSeparator();
     mParams->addParam("Flip H", (bool*)&mTrackingBuffer.data()->header.camera_flip_h);
     mParams->addParam("Flip V", (bool*)&mTrackingBuffer.data()->header.camera_flip_v);
     mParams->addParam("Tracking point quality", &mTrackingBuffer.data()->header.min_point_quality).min(0.001f).max(1.f).step(0.001f);
@@ -152,7 +162,8 @@ void SpeedyEyeApp::captureFrame()
     uint32_t frame_counter = shm->header.frame_counter;
     auto& newFrame = shm->frames[frame_counter & (TrackingBuffer::kNumFrames-1)];
 
-    newFrame.init(getElapsedSeconds());
+    double timeA = getElapsedSeconds();
+    newFrame.init(timeA);
 
     yuv422_to_rgbl(mEye->getLastFramePointer(), mEye->getRowBytes(),
                    (uint8_t*) newFrame.pixels,
@@ -163,12 +174,22 @@ void SpeedyEyeApp::captureFrame()
         auto& prevFrame = shm->frames[(frame_counter - 1) & (TrackingBuffer::kNumFrames-1)];
 
         newFrame.trackPoints(prevFrame);
+        double timeB = getElapsedSeconds();
         
-        while (newFrame.num_points < TrackingBuffer::kMaxTrackingPoints && newFrame.newPoint(prevFrame));
+        const double timeLimit = 0.5f / TrackingBuffer::kFPS;
+        double trackingTime = (timeB - timeA) / timeLimit;
+        mRelativeTrackingTime = trackingTime;
+        
+        if (trackingTime < 1.0f && newFrame.num_points < TrackingBuffer::kMaxTrackingPoints) {
+            newFrame.newPoint(prevFrame);
+        }
+
+        mCurrentNumPoints = newFrame.num_points;
     }
     
     // New frame is now fully written
     shm->header.frame_counter = frame_counter + 1;
+    mAverageCameraFps = shm->header.frame_counter / getElapsedSeconds();
 }
 
 

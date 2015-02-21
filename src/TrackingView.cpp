@@ -47,30 +47,23 @@ void TrackingView::drawFrame(TrackingBuffer &buffer, unsigned index, float alpha
     gl::draw(tex.second);
 
     unsigned num_points = min<unsigned>(0+TrackingBuffer::kMaxTrackingPoints, frame.num_points);
-    unsigned minAge = 10;
+    unsigned minAge = 2;
     
     // Black outline
     gl::color(0.0f, 0.0f, 0.0f, alpha);
+    glPointSize(5);
+    gl::begin(GL_POINTS);
     for (unsigned i = 0; i < num_points; i++) {
         if (frame.points[i].age >= minAge) {
             auto& point = frame.points[i];
             Vec2f pos(point.x, point.y);
-            gl::drawSolidCircle(pos, 0.8f);
+            gl::vertex(pos);
         }
     }
+    gl::end();
 
-    // White dot
-    gl::color(1.0f, 1.0f, 1.0f, 1.0f);
-    for (unsigned i = 0; i < num_points; i++) {
-        if (frame.points[i].age >= minAge) {
-            auto& point = frame.points[i];
-            Vec2f pos(point.x, point.y);
-            gl::drawSolidCircle(pos, 0.5f);
-        }
-    }
-
-    // Vector
-    gl::lineWidth(1.5f);
+    // White vector
+    gl::lineWidth(1);
     gl::color(1.0f, 1.0f, 1.0f, 1.0f);
     for (unsigned i = 0; i < num_points; i++) {
         if (frame.points[i].age >= minAge) {

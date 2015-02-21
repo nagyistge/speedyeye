@@ -118,9 +118,9 @@ bool TrackingBuffer::Frame_t::newPoint(const Frame_t &previous)
     gridCoverage.resize(kGridWidth * kGridHeight);
     fill(gridCoverage.begin(), gridCoverage.end(), false);
     
-    // Calculate coverage of the discovery grid using previous frame points
-    for (unsigned i = 0; i < previous.num_points && i < kMaxTrackingPoints; i++) {
-        const Point_t& p = previous.points[i];
+    // Calculate coverage of the discovery grid
+    for (unsigned i = 0; i < num_points && i < kMaxTrackingPoints; i++) {
+        const Point_t& p = points[i];
         int x = p.x / kDiscoveryGridSpacing;
         int y = p.y / kDiscoveryGridSpacing;
         unsigned idx = x + y * kGridWidth;
