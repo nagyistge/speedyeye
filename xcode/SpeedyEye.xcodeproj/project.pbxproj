@@ -19,6 +19,8 @@
 		7559C09F1A97C2450052AA64 /* libusb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7559C09E1A97C2450052AA64 /* libusb.a */; };
 		7559C0A21A97C25D0052AA64 /* ps3eye.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7559C0A01A97C25D0052AA64 /* ps3eye.cpp */; };
 		75B9645A1A97C46900B3A3EB /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75B964591A97C46900B3A3EB /* IOKit.framework */; };
+		75FE6AD11A97F16E00903951 /* TrackingBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75FE6ACF1A97F16E00903951 /* TrackingBuffer.cpp */; };
+		75FE6AD41A98039100903951 /* TrackingView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75FE6AD21A98039100903951 /* TrackingView.cpp */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +42,10 @@
 		7559C0A11A97C25D0052AA64 /* ps3eye.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ps3eye.h; path = ../src/ps3eye.h; sourceTree = "<group>"; };
 		75B964591A97C46900B3A3EB /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		75B9645B1A97C73800B3A3EB /* yuv422.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = yuv422.h; path = ../src/yuv422.h; sourceTree = "<group>"; };
+		75FE6ACF1A97F16E00903951 /* TrackingBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TrackingBuffer.cpp; path = ../src/TrackingBuffer.cpp; sourceTree = "<group>"; };
+		75FE6AD01A97F16E00903951 /* TrackingBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrackingBuffer.h; path = ../src/TrackingBuffer.h; sourceTree = "<group>"; };
+		75FE6AD21A98039100903951 /* TrackingView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TrackingView.cpp; path = ../src/TrackingView.cpp; sourceTree = "<group>"; };
+		75FE6AD31A98039100903951 /* TrackingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrackingView.h; path = ../src/TrackingView.h; sourceTree = "<group>"; };
 		77AA18EBC4B445CBA81DB3E7 /* CinderApp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = CinderApp.icns; path = ../resources/CinderApp.icns; sourceTree = "<group>"; };
 		884E2446F6064146A9360DEA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* SpeedyEye.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpeedyEye.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -81,6 +87,8 @@
 			children = (
 				7559C0A01A97C25D0052AA64 /* ps3eye.cpp */,
 				BEF4A021A75E4235990397FB /* SpeedyEyeApp.cpp */,
+				75FE6ACF1A97F16E00903951 /* TrackingBuffer.cpp */,
+				75FE6AD21A98039100903951 /* TrackingView.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -88,8 +96,8 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				75B964591A97C46900B3A3EB /* IOKit.framework */,
 				7559C09E1A97C2450052AA64 /* libusb.a */,
+				75B964591A97C46900B3A3EB /* IOKit.framework */,
 				00B784AF0FF439BC000DE1D7 /* Accelerate.framework */,
 				00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */,
 				00B784B10FF439BC000DE1D7 /* AudioUnit.framework */,
@@ -136,6 +144,8 @@
 			isa = PBXGroup;
 			children = (
 				A4B69527DE42487993078D4E /* Resources.h */,
+				75FE6AD01A97F16E00903951 /* TrackingBuffer.h */,
+				75FE6AD31A98039100903951 /* TrackingView.h */,
 				75B9645B1A97C73800B3A3EB /* yuv422.h */,
 				7559C0A11A97C25D0052AA64 /* ps3eye.h */,
 				35615C56F759431B87989053 /* SpeedyEye_Prefix.pch */,
@@ -204,6 +214,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastUpgradeCheck = 0610;
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "SpeedyEye" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -240,8 +251,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				75FE6AD11A97F16E00903951 /* TrackingBuffer.cpp in Sources */,
 				7559C0A21A97C25D0052AA64 /* ps3eye.cpp in Sources */,
 				3165786E68DF4AD8B951BAAE /* SpeedyEyeApp.cpp in Sources */,
+				75FE6AD41A98039100903951 /* TrackingView.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -354,7 +367,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = i386;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CINDER_PATH = ../../cinder_0.8.6_mac;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -362,8 +375,10 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/boost\"";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include ../../cinder_0.8.6_mac/blocks/OpenCV/include ../../cinder_0.8.6_mac/blocks/OpenCV/include/opencv2";
+				VALID_ARCHS = i386;
 			};
 			name = Debug;
 		};
@@ -371,7 +386,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = i386;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CINDER_PATH = ../../cinder_0.8.6_mac;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -381,6 +396,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include ../../cinder_0.8.6_mac/blocks/OpenCV/include ../../cinder_0.8.6_mac/blocks/OpenCV/include/opencv2";
+				VALID_ARCHS = i386;
 			};
 			name = Release;
 		};

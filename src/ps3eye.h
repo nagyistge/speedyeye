@@ -156,6 +156,8 @@ public:
 	uint32_t getHeight() const { return frame_height; }
 	uint8_t getFrameRate() const { return frame_rate; }
 	uint32_t getRowBytes() const { return frame_stride; }
+    bool getFlipH() const { return flip_h; }
+    bool getFlipV() const { return flip_v; }
 
 	//
 	static const std::vector<PS3EYERef>& getDevices( bool forceRefresh = false );
