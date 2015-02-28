@@ -75,34 +75,22 @@
     <Library Include="..\libusb\vc13\libusb-1.0.lib">
       <Filter>Blocks</Filter>
     </Library>
-    <Library Include="..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\x86\opencv_imgproc249.lib">
-      <Filter>Blocks\OpenCV</Filter>
-    </Library>
-    <Library Include="..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\x86\opencv_ml249.lib">
-      <Filter>Blocks\OpenCV</Filter>
-    </Library>
-    <Library Include="..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\x86\opencv_ocl249.lib">
-      <Filter>Blocks\OpenCV</Filter>
-    </Library>
-    <Library Include="..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\x86\opencv_photo249.lib">
-      <Filter>Blocks\OpenCV</Filter>
-    </Library>
-    <Library Include="..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\x86\opencv_ts249.lib">
-      <Filter>Blocks\OpenCV</Filter>
-    </Library>
-    <Library Include="..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\x86\opencv_video249.lib">
-      <Filter>Blocks\OpenCV</Filter>
-    </Library>
-    <Library Include="..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\x86\opencv_videostab249.lib">
-      <Filter>Blocks\OpenCV</Filter>
-    </Library>
     <Library Include="..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\x86\opencv_core249.lib">
       <Filter>Blocks\OpenCV</Filter>
     </Library>
-    <Library Include="..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\x86\opencv_features2d249.lib">
+    <Library Include="..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\x86\opencv_core249d.lib">
       <Filter>Blocks\OpenCV</Filter>
     </Library>
-    <Library Include="..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\x86\opencv_highgui249.lib">
+    <Library Include="..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\x86\opencv_video249d.lib">
+      <Filter>Blocks\OpenCV</Filter>
+    </Library>
+    <Library Include="..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\x86\opencv_imgproc249d.lib">
+      <Filter>Blocks\OpenCV</Filter>
+    </Library>
+    <Library Include="..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\x86\opencv_imgproc249.lib">
+      <Filter>Blocks\OpenCV</Filter>
+    </Library>
+    <Library Include="..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\x86\opencv_video249.lib">
       <Filter>Blocks\OpenCV</Filter>
     </Library>
   </ItemGroup>

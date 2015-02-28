@@ -50,7 +50,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\include;"..\..\..\cinder_0.8.6_mac\include";"..\..\..\cinder_0.8.6_mac\boost";..\..\..\cinder_0.8.6_mac\blocks\OpenCV\include;..\..\..\cinder_0.8.6_mac\blocks\OpenCV\include\opencv2</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\..\cinder_0.8.6_vc2013\include;..\..\cinder_0.8.6_vc2013\boost;..\..\cinder_0.8.6_vc2013\blocks\OpenCV\include;..\..\cinder_0.8.6_vc2013\blocks\OpenCV\include\opencv2</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;NOMINMAX;_WIN32_WINNT=0x0502;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -65,7 +65,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>cinder-$(PlatformToolset)_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>"..\..\..\cinder_0.8.6_mac\lib\msw\$(PlatformTarget)"</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\cinder_0.8.6_vc2013\lib\msw\$(PlatformTarget);..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\$(PlatformTarget)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
@@ -92,7 +92,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>cinder-$(PlatformToolset).lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>"..\..\cinder_0.8.6_vc2013\lib\msw\$(PlatformTarget)"</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\cinder_0.8.6_vc2013\lib\msw\$(PlatformTarget);..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\$(PlatformTarget)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <GenerateMapFile>true</GenerateMapFile>
       <SubSystem>Windows</SubSystem>
@@ -122,16 +122,30 @@
     <ClCompile Include="..\src\TrackingView.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\x86\opencv_core249.lib" />
-    <Library Include="..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\x86\opencv_features2d249.lib" />
-    <Library Include="..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\x86\opencv_highgui249.lib" />
-    <Library Include="..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\x86\opencv_imgproc249.lib" />
-    <Library Include="..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\x86\opencv_ml249.lib" />
-    <Library Include="..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\x86\opencv_ocl249.lib" />
-    <Library Include="..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\x86\opencv_photo249.lib" />
-    <Library Include="..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\x86\opencv_ts249.lib" />
-    <Library Include="..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\x86\opencv_video249.lib" />
-    <Library Include="..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\x86\opencv_videostab249.lib" />
+    <Library Include="..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\x86\opencv_core249.lib">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\x86\opencv_core249d.lib">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\x86\opencv_imgproc249.lib">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\x86\opencv_imgproc249d.lib">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\x86\opencv_video249.lib">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\..\cinder_0.8.6_vc2013\blocks\OpenCV\lib\vc2013\x86\opencv_video249d.lib">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+    </Library>
     <Library Include="..\libusb\vc13\libusb-1.0.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
