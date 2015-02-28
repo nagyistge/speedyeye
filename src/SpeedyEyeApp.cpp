@@ -4,6 +4,7 @@
 #include "cinder/gl/Texture.h"
 #include "cinder/Utilities.h"
 #include "cinder/Thread.h"
+#include <mutex>
 
 #include "yuv422.h"
 #include "ps3eye.h"
@@ -41,6 +42,7 @@ private:
     float                   mMaxTrackingTime;
     int                     mCurrentNumPoints;
     string                  mErrorString;
+	mutex                   mErrorMutex;
     
     void captureFrame();
     void newTrackingPoint();
@@ -122,7 +124,8 @@ void SpeedyEyeApp::threadFn()
 
 	while (!mExiting) {
         if (!PS3EYECam::updateDevices()) {
-            console() << "Stopping because of device error" << endl;
+			lock_guard<mutex> lock(mErrorMutex);
+			mErrorString = "Stopping because of USB device error";
             break;
         }
 
@@ -169,12 +172,15 @@ void SpeedyEyeApp::shutdown()
 
 void SpeedyEyeApp::draw()
 {
-    if (mErrorString.length() > 0) {
-        gl::clear(Color(0.2f, 0.f, 0.f));
-        gl::enableAlphaBlending();
-        gl::drawStringCentered(mErrorString, getWindowSize() * 0.5f);
-        return;
-    }
+	{
+		lock_guard<mutex> lock(mErrorMutex);
+		if (mErrorString.length() > 0) {
+			gl::clear(Color(0.2f, 0.f, 0.f));
+			gl::enableAlphaBlending();
+			gl::drawStringCentered(mErrorString, getWindowSize() * 0.5f);
+			return;
+		}
+	}
 
     gl::clear();
 
