@@ -33,7 +33,8 @@ private:
     thread                  mThread;
     bool                    mExiting;
     float                   mAverageCameraFps;
-    float                   mRelativeTrackingTime;
+    float                   mTrackingTime;
+    float                   mMaxTrackingTime;
     int                     mCurrentNumPoints;
     
     void captureFrame();
@@ -53,7 +54,8 @@ void SpeedyEyeApp::setup()
 	mExiting = false;
     mAverageCameraFps = 0.0f;
     mCurrentNumPoints = 0;
-    mRelativeTrackingTime = 0.0f;
+    mTrackingTime = 0.0f;
+    mMaxTrackingTime = 0.9f;
     mTrackingBuffer = TrackingBuffer("tracking-buffer.bin");
     
     std::vector<PS3EYECam::PS3EYERef> devices(PS3EYECam::getDevices());
@@ -73,11 +75,12 @@ void SpeedyEyeApp::setup()
 
     mThread = thread(bind(&SpeedyEyeApp::threadFn, this));
 
-    mParams = params::InterfaceGl::create(getWindow(), "Camera Settings", toPixels(Vec2i(250, 300)));
+    mParams = params::InterfaceGl::create(getWindow(), "Camera Settings", toPixels(Vec2i(250, 350)));
 
     mParams->addParam("Camera FPS", &mAverageCameraFps, "readonly=true");
     mParams->addParam("Tracking points", &mCurrentNumPoints, "readonly=true");
-    mParams->addParam("Tracking time", &mRelativeTrackingTime, "readonly=true");
+    mParams->addParam("Tracking time", &mTrackingTime, "readonly=true");
+    mParams->addParam("Max tracking time", &mMaxTrackingTime).min(0.f).max(1.f).step(0.01f);
     mParams->addSeparator();
     mParams->addParam("Flip H", (bool*)&mTrackingBuffer.data()->header.camera_flip_h);
     mParams->addParam("Flip V", (bool*)&mTrackingBuffer.data()->header.camera_flip_v);
@@ -175,12 +178,14 @@ void SpeedyEyeApp::captureFrame()
 
         newFrame.trackPoints(prevFrame);
         double timeB = getElapsedSeconds();
+
+        shm->header.total_motionX += newFrame.motionX;
+        shm->header.total_motionY += newFrame.motionY;
         
-        const double timeLimit = 0.5f / TrackingBuffer::kFPS;
-        double trackingTime = (timeB - timeA) / timeLimit;
-        mRelativeTrackingTime = trackingTime;
+        double trackingTime = (timeB - timeA) * TrackingBuffer::kFPS;
+        mTrackingTime = trackingTime;
         
-        if (trackingTime < 1.0f && newFrame.num_points < TrackingBuffer::kMaxTrackingPoints) {
+        if (trackingTime < mMaxTrackingTime && newFrame.num_points < TrackingBuffer::kMaxTrackingPoints) {
             newFrame.newPoint(prevFrame);
         }
 

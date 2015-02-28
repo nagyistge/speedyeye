@@ -41,6 +41,8 @@ TrackingBuffer::TrackingBuffer(const char *filename)
     header.camera_redblc = 128;
     header.camera_flip_h = false;
     header.camera_flip_v = false;
+    header.total_motionX = 0.f;
+    header.total_motionY = 0.f;
 }
 
 void TrackingBuffer::Frame_t::init(double timestamp)
@@ -76,6 +78,9 @@ void TrackingBuffer::Frame_t::trackPoints(const Frame_t &previous)
     calcOpticalFlowPyrLK(imageA, imageB, pointsA, pointsB,
                          status, err, winSize, 3, termcrit, 3, minEigThreshold);
 
+    Point2f numerator(0.f, 0.f);
+    float denominator = 0.f;
+    
     for (unsigned i = 0; i < status.size(); i++) {
         unsigned this_num_points = num_points;
         const float kDeletePointProbability = 0.001f;
@@ -88,7 +93,21 @@ void TrackingBuffer::Frame_t::trackPoints(const Frame_t &previous)
             newpoint.age = previous.points[i].age + 1;
             newpoint.last_index = i;
             num_points = this_num_points + 1;
+
+            // Weighted motion averaging
+            float weight = (newpoint.age - kPointTrialPeriod) / err[i];
+            numerator.x += newpoint.dx * weight;
+            numerator.y += newpoint.dy * weight;
+            denominator += weight;
         }
+    }
+    
+    if (denominator > 0.f) {
+        motionX = numerator.x / denominator;
+        motionY = numerator.y / denominator;
+    } else {
+        motionX = 0.f;
+        motionY = 0.f;
     }
 }
 

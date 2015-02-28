@@ -23,6 +23,8 @@ void TrackingView::draw(TrackingBuffer &buffer)
     for (uint32_t i = first_frame; i < frame_counter; i++) {
         drawFrame(buffer, i, 0.2f);
     }
+    
+    drawTotalMotion(buffer);
 }
 
 void TrackingView::drawFrame(TrackingBuffer &buffer, unsigned index, float alpha)
@@ -47,14 +49,13 @@ void TrackingView::drawFrame(TrackingBuffer &buffer, unsigned index, float alpha
     gl::draw(tex.second);
 
     unsigned num_points = min<unsigned>(0+TrackingBuffer::kMaxTrackingPoints, frame.num_points);
-    unsigned minAge = 2;
     
     // Black outline
     gl::color(0.0f, 0.0f, 0.0f, alpha);
     glPointSize(5);
     gl::begin(GL_POINTS);
     for (unsigned i = 0; i < num_points; i++) {
-        if (frame.points[i].age >= minAge) {
+        if (frame.points[i].age >= TrackingBuffer::kPointTrialPeriod) {
             auto& point = frame.points[i];
             Vec2f pos(point.x, point.y);
             gl::vertex(pos);
@@ -66,12 +67,39 @@ void TrackingView::drawFrame(TrackingBuffer &buffer, unsigned index, float alpha
     gl::lineWidth(1);
     gl::color(1.0f, 1.0f, 1.0f, 1.0f);
     for (unsigned i = 0; i < num_points; i++) {
-        if (frame.points[i].age >= minAge) {
+        if (frame.points[i].age >= TrackingBuffer::kPointTrialPeriod) {
             auto& point = frame.points[i];
             Vec2f pos(point.x, point.y);
             Vec2f delta(point.dx, point.dy);
             gl::drawLine(pos-delta, pos);
         }
     }
+}
+
+static float fmod_positive(float n, float d)
+{
+    float x = fmod(n, d);
+    if (x < 0)
+        x += d;
+    return x;
+}
+
+void TrackingView::drawTotalMotion(TrackingBuffer &buffer)
+{
+    // Wrap around screen edges
+    Vec2f pos(fmod_positive(buffer.data()->header.total_motionX, buffer.kWidth),
+              fmod_positive(buffer.data()->header.total_motionY, buffer.kHeight));
+
+    // Pink dot with black outline
+    gl::color(0.f, 0.f, 0.f);
+    glPointSize(14);
+    gl::begin(GL_POINTS);
+    gl::vertex(pos);
+    gl::end();
+    gl::color(1.0f, 0.4f, 1.0f, 1.0f);
+    glPointSize(10);
+    gl::begin(GL_POINTS);
+    gl::vertex(pos);
+    gl::end();
 }
     

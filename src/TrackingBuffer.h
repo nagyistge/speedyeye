@@ -25,6 +25,7 @@ public:
     static const unsigned kFPS = 187;
     
     static const unsigned kMaxTrackingPoints = 1024;
+    static const unsigned kPointTrialPeriod = 2;
     
     struct Header_t {
         uint32_t frame_counter;
@@ -41,6 +42,8 @@ public:
         uint8_t camera_redblc;
         uint8_t camera_flip_h;
         uint8_t camera_flip_v;
+        double total_motionX;
+        double total_motionY;
     };
     
     struct Point_t {
@@ -53,6 +56,7 @@ public:
     struct Frame_t {
         double timestamp;
         uint32_t num_points;
+        float motionX, motionY;                 // Weighted motion from all points
         uint32_t pixels[kWidth * kHeight];      // Luminance + RGB
         Point_t points[kMaxTrackingPoints];
 
