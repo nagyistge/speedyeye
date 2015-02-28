@@ -1,6 +1,7 @@
 // High level sparse LK tracker (c) 2015 Micah Elizabeth Scott
 // MIT license
 
+#include <stdio.h>
 #include "cinder/Rand.h"
 #include "CinderOpenCV.h"
 #include "TrackingBuffer.h"
@@ -10,17 +11,16 @@ using namespace boost::interprocess;
 using namespace cv;
 
 
-TrackingBuffer::TrackingBuffer()
-{}
-
-TrackingBuffer::TrackingBuffer(const char *filename)
+bool TrackingBuffer::open(const char *filename)
 {
     // Make an empty file of the right size
-    filebuf fb;
-    fb.open(filename, ios_base::in | ios_base::out | ios_base::trunc | ios_base::binary);
-    fb.pubseekoff(sizeof(SharedMemory_t) - 1, ios_base::beg);
-    fb.sputc(0);
-    fb.close();
+    FILE *f = fopen(filename, "wb");
+    if (!f) {
+        return false;
+    }
+    fseek(f, sizeof(SharedMemory_t)-1, SEEK_SET);
+    fputc(0, f);
+    fclose(f);
 
     mFileMapping = file_mapping(filename, read_write);
     mMappedRegion = mapped_region(mFileMapping, read_write);
@@ -43,6 +43,8 @@ TrackingBuffer::TrackingBuffer(const char *filename)
     header.camera_flip_v = false;
     header.total_motionX = 0.f;
     header.total_motionY = 0.f;
+
+    return true;
 }
 
 void TrackingBuffer::Frame_t::init(double timestamp)

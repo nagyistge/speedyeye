@@ -13,8 +13,7 @@
 
 class TrackingBuffer {
 public:
-    TrackingBuffer();
-    TrackingBuffer(const char *filename);
+    bool open(const char *filename);
     
     // Number of frames the buffer can hold, as a power of two
     static const unsigned kNumFramesLog2 = 5;

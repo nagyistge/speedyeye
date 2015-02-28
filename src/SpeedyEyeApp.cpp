@@ -28,6 +28,7 @@ public:
 private:
     params::InterfaceGlRef  mParams;
     PS3EYECam::PS3EYERef    mEye;
+    fs::path                mTrackingBufferPath;
     TrackingBuffer          mTrackingBuffer;
     TrackingView            mTrackingView;
     thread                  mThread;
@@ -36,6 +37,7 @@ private:
     float                   mTrackingTime;
     float                   mMaxTrackingTime;
     int                     mCurrentNumPoints;
+    string                  mErrorString;
     
     void captureFrame();
     void newTrackingPoint();
@@ -56,19 +58,25 @@ void SpeedyEyeApp::setup()
     mCurrentNumPoints = 0;
     mTrackingTime = 0.0f;
     mMaxTrackingTime = 0.9f;
-    mTrackingBuffer = TrackingBuffer("tracking-buffer.bin");
+
+    mTrackingBufferPath = getSaveFilePath("tracking-buffer.bin");
+
+    if (!mTrackingBuffer.open(mTrackingBufferPath.string().c_str())) {
+        mErrorString = "Failed to create tracking buffer file";
+        return;
+    }
     
     std::vector<PS3EYECam::PS3EYERef> devices(PS3EYECam::getDevices());
     if (!devices.size()) {
-        console() << "No camera detected" << endl;
-        exit(1);
+        mErrorString = "No camera detected.  (Sorry, you'll need to restart the app to try again)";
+        return;
     }
 
     mEye = devices.at(0);
     bool res = mEye->init(TrackingBuffer::kWidth, TrackingBuffer::kHeight, TrackingBuffer::kFPS);
     if (!res) {
-        console() << "Failed to initialize camera" << endl;
-        exit(1);
+        mErrorString = "Failed to initialize camera?";
+        return;
     }
 
     mTrackingView.setup();
@@ -145,17 +153,34 @@ void SpeedyEyeApp::threadFn()
 void SpeedyEyeApp::shutdown()
 {
 	mExiting = true;
-	mThread.join();
+    if (mThread.joinable()) {
+        mThread.join();
+    }
 }
 
 void SpeedyEyeApp::draw()
 {
-    gl::clear();
+    if (mErrorString.length() > 0) {
+        gl::clear(Color(0.2f, 0.f, 0.f));
+        gl::enableAlphaBlending();
+        gl::drawStringCentered(mErrorString, getWindowSize() * 0.5f);
+        return;
+    }
     
+    gl::clear();
+
+    // Coordinate system to match the camera resolution
     gl::setMatricesWindow(TrackingBuffer::kWidth, TrackingBuffer::kHeight);
     mTrackingView.draw(mTrackingBuffer);
-    
+
+    // Pixel coordinates
     gl::setMatricesWindow(getWindowWidth(), getWindowHeight());
+
+    // Reminder of the buffer path we're using
+    gl::color(0.7f, 1.f, 0.8f);
+    gl::enableAlphaBlending();
+    gl::drawStringCentered(mTrackingBufferPath.string().c_str(), Vec2i(getWindowWidth()/2, getWindowHeight() - 20));
+
     mParams->draw();
 }
 
