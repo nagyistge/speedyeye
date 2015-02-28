@@ -1,5 +1,6 @@
 
 #include "ps3eye.h"
+#include <algorithm>
 
 #if defined WIN32 || defined _WIN32 || defined WINCE
 	#include <windows.h>
@@ -10,6 +11,12 @@
 		#include <mach/mach.h>
 		#include <mach/mach_time.h>
 	#endif
+#endif
+
+#ifdef DEBUG
+#define  debug printf
+#else
+#define  debug (void)
 #endif
 
 namespace ps3eye {
