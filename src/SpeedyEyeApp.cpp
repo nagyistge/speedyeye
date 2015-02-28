@@ -18,6 +18,8 @@ using namespace ps3eye;
 
 class SpeedyEyeApp : public AppNative {
 public:
+	SpeedyEyeApp();
+
 	void setup();
 	void draw();
 	void shutdown();
@@ -33,6 +35,7 @@ private:
     TrackingView            mTrackingView;
     thread                  mThread;
     bool                    mExiting;
+	bool                    mInitialized;
     float                   mAverageCameraFps;
     float                   mTrackingTime;
     float                   mMaxTrackingTime;
@@ -43,6 +46,10 @@ private:
     void newTrackingPoint();
 };
 
+
+SpeedyEyeApp::SpeedyEyeApp()
+	: mInitialized(false)
+{}
 
 void SpeedyEyeApp::prepareSettings(Settings *settings)
 {
@@ -105,6 +112,8 @@ void SpeedyEyeApp::setup()
     mParams->addParam("Blue balance", &mTrackingBuffer.data()->header.camera_blueblc).min(0).max(255);
     mParams->addParam("Red balance", &mTrackingBuffer.data()->header.camera_redblc).min(0).max(255);
     mParams->addParam("Hue", &mTrackingBuffer.data()->header.camera_hue).min(0).max(255);
+
+	mInitialized = true;
 }
 
 void SpeedyEyeApp::threadFn()
@@ -166,22 +175,24 @@ void SpeedyEyeApp::draw()
         gl::drawStringCentered(mErrorString, getWindowSize() * 0.5f);
         return;
     }
-    
+
     gl::clear();
 
-    // Coordinate system to match the camera resolution
-    gl::setMatricesWindow(TrackingBuffer::kWidth, TrackingBuffer::kHeight);
-    mTrackingView.draw(mTrackingBuffer);
+	if (mInitialized) {
+		// Coordinate system to match the camera resolution
+		gl::setMatricesWindow(TrackingBuffer::kWidth, TrackingBuffer::kHeight);
+		mTrackingView.draw(mTrackingBuffer);
 
-    // Pixel coordinates
-    gl::setMatricesWindow(getWindowWidth(), getWindowHeight());
+		// Pixel coordinates
+		gl::setMatricesWindow(getWindowWidth(), getWindowHeight());
 
-    // Reminder of the buffer path we're using
-    gl::color(0.7f, 1.f, 0.8f);
-    gl::enableAlphaBlending();
-    gl::drawStringCentered(mTrackingBufferPath.string().c_str(), Vec2i(getWindowWidth()/2, getWindowHeight() - 20));
+		// Reminder of the buffer path we're using
+		gl::color(0.7f, 1.f, 0.8f);
+		gl::enableAlphaBlending();
+		gl::drawStringCentered(mTrackingBufferPath.string().c_str(), Vec2i(getWindowWidth() / 2, getWindowHeight() - 20));
 
-    mParams->draw();
+		mParams->draw();
+	}
 }
 
 void SpeedyEyeApp::captureFrame()

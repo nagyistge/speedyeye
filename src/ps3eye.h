@@ -29,12 +29,6 @@
 
 #include <stdint.h>
 
-#if defined(DEBUG)
-#define debug(x...) fprintf(stdout,x)
-#else
-#define debug(x...) 
-#endif
-
 
 namespace ps3eye {
 
