@@ -2,3 +2,5 @@
 *.xcworkspace/
 xcuserdata/
 xcode/build/
+vc2013/Debug/
+vc2013/Release/
