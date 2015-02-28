@@ -9,5 +9,9 @@ This is a simple way to add high-speed motion tracking to your interactive art. 
 * Every frame is converted to RGBA and stored in a **shared memory ring buffer**
 * Additionally, the OpenCV implementation of [Lucas-Kanade sparse optical flow](http://en.wikipedia.org/wiki/Lucas%E2%80%93Kanade_method) runs in real-time on each frame, automatically finding and tracking as many points as it can with the available CPU power.
 * The tracking points and their motion, with subpixel accuracy, are also stored in this ring buffer
+* Total motion is integrated using the same technique used by [Ecstatic Epiphany](https://github.com/scanlime/ecstatic-epiphany)'s motion tracking
 
-There's a simple Processing API for accessing the data in SpeedyEye's shared memory buffer, which you'll see as `tracking-buffer.bin` once you run the app. You can also read the code and comments in `SpeedyEye.pde` to see how to access the tracking data from a different language.
+To Do
+-----
+
+* High level client APIs still yet to be written. So far, there's a very low-level Processing example.
