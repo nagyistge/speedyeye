@@ -27,6 +27,8 @@ public:
     static const unsigned kPointTrialPeriod = 2;
     
     struct Header_t {
+        double total_motionX;
+        double total_motionY;
         uint32_t frame_counter;
         float min_point_quality;
         uint8_t camera_autogain;
@@ -41,8 +43,6 @@ public:
         uint8_t camera_redblc;
         uint8_t camera_flip_h;
         uint8_t camera_flip_v;
-        double total_motionX;
-        double total_motionY;
     };
     
     struct Point_t {
